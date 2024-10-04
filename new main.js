@@ -62,7 +62,7 @@ function todoDelete(e) {
     const index = liElement.getAttribute('data-index');
     todoArray.splice(index, 1);
 
-    const storedArray = JSON.parse(localStorage.getItem('strArray'));
+    let = JSON.parse(localStorage.getItem('strArray'));
     storedArray.splice(index, 1);
     localStorage.setItem('strArray', JSON.stringify(storedArray));
 }
@@ -70,7 +70,7 @@ function todoDelete(e) {
 function delTodos() {
     listArr.innerHTML = "";
     todoArray.length = 0;
-    const storedArray = JSON.parse(localStorage.getItem('strArray'));
+    let = JSON.parse(localStorage.getItem('strArray'));
     storedArray.length = 0;
     localStorage.setItem('strArray', JSON.stringify(storedArray));
 }
@@ -80,7 +80,7 @@ function addTodoToStorage() {
 }
 
 function storageToUI() {
-    const storedArray = getTodosFromStorage();
+    let storedArray = getTodosFromStorage();
     todoArray = storedArray;
     addTodoToUI(storedArray);
 }

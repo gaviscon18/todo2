@@ -6,7 +6,7 @@ const delBtn = document.getElementById("deleteAllBtn");
 
 addBtn.addEventListener("click", addTodo);
 delBtn.addEventListener("click", delTodos);
-window.addEventListener("DOMContentLoaded", storageToUI);
+window.addEventListener("DOMContentLoaded", storageToUI); // Sayfa yüklendiğinde görevleri yükle
 
 function addTodo(e) {
     if (todoInput.value === "") {
@@ -16,13 +16,14 @@ function addTodo(e) {
             todo: todoInput.value,
             done: false
         };
-        
+
         todoArray.push(newTodo); // Yeni görev ekle
         addTodoToUI(todoArray); // UI'yi güncelle
         addTodoToStorage(todoArray); // localStorage'ı güncelle
+        todoInput.value = ""; // Giriş alanını temizle
     }
 
-    e.preventDefault();
+    e.preventDefault(); // Varsayılan davranışı engelle
 }
 
 function addTodoToUI(todoArray) {
@@ -48,8 +49,6 @@ function addTodoToUI(todoArray) {
         listItem.appendChild(delIcon);
         listArr.appendChild(listItem);
     }
-
-    todoInput.value = ""; // Giriş alanını temizle
 }
 
 function todoDelete(e) {
@@ -62,6 +61,9 @@ function todoDelete(e) {
     const storedArray = JSON.parse(localStorage.getItem('strArray'));
     storedArray.splice(index, 1); // localStorage'dan kaldır
     localStorage.setItem('strArray', JSON.stringify(storedArray)); // Güncellenmiş diziyi kaydet
+
+    // UI'yi güncelle
+    addTodoToUI(storedArray);
 }
 
 function delTodos() {

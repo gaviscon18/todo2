@@ -4,34 +4,38 @@ let todoArray = [];
 const listArr = document.getElementById("listArray");
 const delBtn = document.getElementById("deleteAllBtn");
 
-
 addBtn.addEventListener("click", addTodo);
 delBtn.addEventListener("click", delTodos);
-addEventListener("DOMContentLoaded", storageToUI);
+window.addEventListener("DOMContentLoaded", storageToUI); // Sayfa yüklendiğinde görevleri yükle
 
 function addTodo(e) {
+    e.preventDefault(); // Varsayılan davranışı engelle
 
-    if (todoInput.value == "") {
-        alert("Lütfen boş değer girmeyiniz!")
+    if (todoInput.value === "") {
+        alert("Lütfen boş değer girmeyiniz!");
     } else {
         const newTodo = {
             todo: todoInput.value,
             done: false
         };
-        todoArray.push(newTodo);
-        addTodoToUI(todoArray);
-        addTodoToStorage(todoArray);
+
+        // LocalStorage'dan mevcut görevleri al
+        const storedArray = JSON.parse(localStorage.getItem('strArray')) || [];
+        storedArray.push(newTodo); // Yeni görevi diziye ekle
+        localStorage.setItem('strArray', JSON.stringify(storedArray)); // LocalStorage'ı güncelle
+
+        // UI'yi güncelle
+        addTodoToUI(storedArray);
+
+        // Giriş alanını temizle
+        todoInput.value = "";
     }
-
-    e.preventDefault()
-
 }
 
 function addTodoToUI(todoArray) {
-    listArr.innerHTML = "";
+    listArr.innerHTML = ""; // UI'yi temizle
 
-    for (i = 0; i < todoArray.length; i++) {
-
+    for (let i = 0; i < todoArray.length; i++) {
         const listItem = document.createElement("li");
         listItem.className = "list-group-item d-flex justify-content-between border rounded col-md-8";
         listItem.appendChild(document.createTextNode(todoArray[i].todo));
@@ -39,61 +43,53 @@ function addTodoToUI(todoArray) {
         listItem.setAttribute('data-index', i);
 
         const delIcon = document.createElement("a");
-        delIcon.href = "#"
-        delIcon.className = "delIcon"
+        delIcon.href = "#";
+        delIcon.className = "delIcon";
 
-        const trashIcon = document.createElement("i")
-        trashIcon.className = "bi bi-trash"
-        trashIcon.id = "trashDel"
+        const trashIcon = document.createElement("i");
+        trashIcon.className = "bi bi-trash";
+        trashIcon.id = "trashDel";
         trashIcon.onclick = todoDelete;
 
         delIcon.appendChild(trashIcon);
         listItem.appendChild(delIcon);
         listArr.appendChild(listItem);
     }
-
-    todoInput.value = "";
 }
 
 function todoDelete(e) {
     const liElement = e.target.parentElement.parentElement;
-
-    liElement.remove();
     const index = liElement.getAttribute('data-index');
-    todoArray.splice(index, 1);
 
-    let = JSON.parse(localStorage.getItem('strArray'));
-    storedArray.splice(index, 1);
-    localStorage.setItem('strArray', JSON.stringify(storedArray));
-}
+    liElement.remove(); // UI'dan kaldır
 
-function delTodos() {
-    listArr.innerHTML = "";
-    todoArray.length = 0;
-    let = JSON.parse(localStorage.getItem('strArray'));
-    storedArray.length = 0;
-    localStorage.setItem('strArray', JSON.stringify(storedArray));
-}
+    // LocalStorage'dan görevleri al ve sil
+    const storedArray = JSON.parse(localStorage.getItem('strArray'));
+    storedArray.splice(index, 1); // Silme işlemi
+    localStorage.setItem('strArray', JSON.stringify(storedArray)); // Güncellenmiş diziyi kaydet
 
-function addTodoToStorage() {
-    localStorage.setItem('strArray', JSON.stringify(todoArray));
-}
-
-function storageToUI() {
-    let storedArray = getTodosFromStorage();
-    todoArray = storedArray;
+    // UI'yi güncelle
     addTodoToUI(storedArray);
 }
 
-function getTodosFromStorage() { // Storagedan Todoları Alma
+function delTodos() {
+    listArr.innerHTML = ""; // UI'yi temizle
+    localStorage.removeItem('strArray'); // localStorage'daki veriyi sil
+}
 
+function storageToUI() {
+    const storedArray = getTodosFromStorage(); // localStorage'dan görevleri al
+    todoArray = storedArray; // Todo dizisini güncelle
+    addTodoToUI(todoArray); // UI'yi güncelle
+}
+
+function getTodosFromStorage() {
     let storedArray;
 
-    if (localStorage.getItem("todos") === null) {
-        storedArray = [];
+    if (localStorage.getItem("strArray") === null) {
+        storedArray = []; // Eğer localStorage boşsa yeni bir dizi oluştur
     } else {
-        storedArray = JSON.parse(localStorage.getItem('strArray'));
+        storedArray = JSON.parse(localStorage.getItem('strArray')); // localStorage'daki veriyi al
     }
-    return storedArray;
-
+    return storedArray; // Diziyi döndür
 }

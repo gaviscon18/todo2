@@ -4,34 +4,31 @@ let todoArray = [];
 const listArr = document.getElementById("listArray");
 const delBtn = document.getElementById("deleteAllBtn");
 
-
 addBtn.addEventListener("click", addTodo);
 delBtn.addEventListener("click", delTodos);
-addEventListener("DOMContentLoaded", storageToUI);
+window.addEventListener("DOMContentLoaded", storageToUI);
 
 function addTodo(e) {
-
-    if (todoInput.value == "") {
-        alert("Lütfen boş değer girmeyiniz!")
+    if (todoInput.value === "") {
+        alert("Lütfen boş değer girmeyiniz!");
     } else {
         const newTodo = {
             todo: todoInput.value,
             done: false
         };
-        todoArray.push(newTodo);
-        addTodoToUI(todoArray);
-        addTodoToStorage(todoArray);
+        
+        todoArray.push(newTodo); // Yeni görev ekle
+        addTodoToUI(todoArray); // UI'yi güncelle
+        addTodoToStorage(todoArray); // localStorage'ı güncelle
     }
 
-    e.preventDefault()
-
+    e.preventDefault();
 }
 
 function addTodoToUI(todoArray) {
-    listArr.innerHTML = "";
+    listArr.innerHTML = ""; // UI'yi temizle
 
-    for (i = 0; i < todoArray.length; i++) {
-
+    for (let i = 0; i < todoArray.length; i++) {
         const listItem = document.createElement("li");
         listItem.className = "list-group-item d-flex justify-content-between border rounded col-md-8";
         listItem.appendChild(document.createTextNode(todoArray[i].todo));
@@ -39,12 +36,12 @@ function addTodoToUI(todoArray) {
         listItem.setAttribute('data-index', i);
 
         const delIcon = document.createElement("a");
-        delIcon.href = "#"
-        delIcon.className = "delIcon"
+        delIcon.href = "#";
+        delIcon.className = "delIcon";
 
-        const trashIcon = document.createElement("i")
-        trashIcon.className = "bi bi-trash"
-        trashIcon.id = "trashDel"
+        const trashIcon = document.createElement("i");
+        trashIcon.className = "bi bi-trash";
+        trashIcon.id = "trashDel";
         trashIcon.onclick = todoDelete;
 
         delIcon.appendChild(trashIcon);
@@ -52,48 +49,44 @@ function addTodoToUI(todoArray) {
         listArr.appendChild(listItem);
     }
 
-    todoInput.value = "";
+    todoInput.value = ""; // Giriş alanını temizle
 }
 
 function todoDelete(e) {
     const liElement = e.target.parentElement.parentElement;
-
-    liElement.remove();
     const index = liElement.getAttribute('data-index');
-    todoArray.splice(index, 1);
+
+    liElement.remove(); // UI'dan kaldır
+    todoArray.splice(index, 1); // Diziden kaldır
 
     const storedArray = JSON.parse(localStorage.getItem('strArray'));
-    storedArray.splice(index, 1);
-    localStorage.setItem('strArray', JSON.stringify(storedArray));
+    storedArray.splice(index, 1); // localStorage'dan kaldır
+    localStorage.setItem('strArray', JSON.stringify(storedArray)); // Güncellenmiş diziyi kaydet
 }
 
 function delTodos() {
-    listArr.innerHTML = "";
-    todoArray.length = 0;
-    const storedArray = JSON.parse(localStorage.getItem('strArray'));
-    storedArray.length = 0;
-    localStorage.setItem('strArray', JSON.stringify(storedArray));
+    listArr.innerHTML = ""; // UI'yi temizle
+    todoArray = []; // Diziyi sıfırla
+    localStorage.removeItem('strArray'); // localStorage'deki veriyi sil
 }
 
-function addTodoToStorage() {
-    localStorage.setItem('strArray', JSON.stringify(todoArray));
+function addTodoToStorage(todoArray) {
+    localStorage.setItem('strArray', JSON.stringify(todoArray)); // Diziyi localStorage'a kaydet
 }
 
 function storageToUI() {
-    const storedArray = getTodosFromStorage();
-    todoArray = storedArray;
-    addTodoToUI(storedArray);
+    const storedArray = getTodosFromStorage(); // localStorage'dan görevleri al
+    todoArray = storedArray; // Todo dizisini güncelle
+    addTodoToUI(todoArray); // UI'yi güncelle
 }
 
-function getTodosFromStorage() { // Storagedan Todoları Alma
-
+function getTodosFromStorage() {
     let storedArray;
 
-    if (localStorage.getItem("todos") === null) {
-        storedArray = [];
+    if (localStorage.getItem("strArray") === null) {
+        storedArray = []; // Eğer localStorage boşsa yeni bir dizi oluştur
     } else {
-        storedArray = JSON.parse(localStorage.getItem('strArray'));
+        storedArray = JSON.parse(localStorage.getItem('strArray')); // localStorage'daki veriyi al
     }
-    return storedArray;
-
+    return storedArray; // Diziyi döndür
 }

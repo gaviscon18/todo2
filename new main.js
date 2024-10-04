@@ -18,8 +18,8 @@ function addTodo(e) {
         };
 
         todoArray.push(newTodo); // Yeni görev ekle
-        addTodoToUI(todoArray); // UI'yi güncelle
         addTodoToStorage(todoArray); // localStorage'ı güncelle
+        addTodoToUI(todoArray); // UI'yi güncelle
         todoInput.value = ""; // Giriş alanını temizle
     }
 
@@ -63,7 +63,7 @@ function todoDelete(e) {
     localStorage.setItem('strArray', JSON.stringify(storedArray)); // Güncellenmiş diziyi kaydet
 
     // UI'yi güncelle
-    addTodoToUI(storedArray);
+    addTodoToUI(storedArray); // UI'yı güncelle
 }
 
 function delTodos() {

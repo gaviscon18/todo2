@@ -4,32 +4,34 @@ let todoArray = [];
 const listArr = document.getElementById("listArray");
 const delBtn = document.getElementById("deleteAllBtn");
 
+
 addBtn.addEventListener("click", addTodo);
 delBtn.addEventListener("click", delTodos);
-window.addEventListener("DOMContentLoaded", storageToUI); // Sayfa yüklendiğinde görevleri yükle
+addEventListener("DOMContentLoaded", storageToUI);
 
 function addTodo(e) {
-    if (todoInput.value === "") {
-        alert("Lütfen boş değer girmeyiniz!");
+
+    if (todoInput.value == "") {
+        alert("Lütfen boş değer girmeyiniz!")
     } else {
         const newTodo = {
             todo: todoInput.value,
             done: false
         };
-
-        todoArray.push(newTodo); // Yeni görev ekle
-        addTodoToStorage(todoArray); // localStorage'ı güncelle
-        addTodoToUI(todoArray); // UI'yi güncelle
-        todoInput.value = ""; // Giriş alanını temizle
+        todoArray.push(newTodo);
+        addTodoToUI(todoArray);
+        addTodoToStorage(todoArray);
     }
 
-    e.preventDefault(); // Varsayılan davranışı engelle
+    e.preventDefault()
+
 }
 
 function addTodoToUI(todoArray) {
-    listArr.innerHTML = ""; // UI'yi temizle
+    listArr.innerHTML = "";
 
-    for (let i = 0; i < todoArray.length; i++) {
+    for (i = 0; i < todoArray.length; i++) {
+
         const listItem = document.createElement("li");
         listItem.className = "list-group-item d-flex justify-content-between border rounded col-md-8";
         listItem.appendChild(document.createTextNode(todoArray[i].todo));
@@ -37,58 +39,61 @@ function addTodoToUI(todoArray) {
         listItem.setAttribute('data-index', i);
 
         const delIcon = document.createElement("a");
-        delIcon.href = "#";
-        delIcon.className = "delIcon";
+        delIcon.href = "#"
+        delIcon.className = "delIcon"
 
-        const trashIcon = document.createElement("i");
-        trashIcon.className = "bi bi-trash";
-        trashIcon.id = "trashDel";
+        const trashIcon = document.createElement("i")
+        trashIcon.className = "bi bi-trash"
+        trashIcon.id = "trashDel"
         trashIcon.onclick = todoDelete;
 
         delIcon.appendChild(trashIcon);
         listItem.appendChild(delIcon);
         listArr.appendChild(listItem);
     }
+
+    todoInput.value = "";
 }
 
 function todoDelete(e) {
     const liElement = e.target.parentElement.parentElement;
-    const index = liElement.getAttribute('data-index');
 
-    liElement.remove(); // UI'dan kaldır
-    todoArray.splice(index, 1); // Diziden kaldır
+    liElement.remove();
+    const index = liElement.getAttribute('data-index');
+    todoArray.splice(index, 1);
 
     const storedArray = JSON.parse(localStorage.getItem('strArray'));
-    storedArray.splice(index, 1); // localStorage'dan kaldır
-    localStorage.setItem('strArray', JSON.stringify(storedArray)); // Güncellenmiş diziyi kaydet
-
-    // UI'yi güncelle
-    addTodoToUI(storedArray); // UI'yı güncelle
+    storedArray.splice(index, 1);
+    localStorage.setItem('strArray', JSON.stringify(storedArray));
 }
 
 function delTodos() {
-    listArr.innerHTML = ""; // UI'yi temizle
-    todoArray = []; // Diziyi sıfırla
-    localStorage.removeItem('strArray'); // localStorage'deki veriyi sil
+    listArr.innerHTML = "";
+    todoArray.length = 0;
+    const storedArray = JSON.parse(localStorage.getItem('strArray'));
+    storedArray.length = 0;
+    localStorage.setItem('strArray', JSON.stringify(storedArray));
 }
 
-function addTodoToStorage(todoArray) {
-    localStorage.setItem('strArray', JSON.stringify(todoArray)); // Diziyi localStorage'a kaydet
+function addTodoToStorage() {
+    localStorage.setItem('strArray', JSON.stringify(todoArray));
 }
 
 function storageToUI() {
-    const storedArray = getTodosFromStorage(); // localStorage'dan görevleri al
-    todoArray = storedArray; // Todo dizisini güncelle
-    addTodoToUI(todoArray); // UI'yi güncelle
+    const storedArray = getTodosFromStorage();
+    todoArray = storedArray;
+    addTodoToUI(storedArray);
 }
 
-function getTodosFromStorage() {
+function getTodosFromStorage() { // Storagedan Todoları Alma
+
     let storedArray;
 
-    if (localStorage.getItem("strArray") === null) {
-        storedArray = []; // Eğer localStorage boşsa yeni bir dizi oluştur
+    if (localStorage.getItem("todos") === null) {
+        storedArray = [];
     } else {
-        storedArray = JSON.parse(localStorage.getItem('strArray')); // localStorage'daki veriyi al
+        storedArray = JSON.parse(localStorage.getItem('strArray'));
     }
-    return storedArray; // Diziyi döndür
+    return storedArray;
+
 }

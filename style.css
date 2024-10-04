@@ -1,0 +1,43 @@
+ @media screen and (min-width:200px) and (max-width: 767.98px) {
+     /*  #addButton {
+         margin-left: 17.5rem;
+     } */
+
+     #deleteAllBtn {
+         margin-left: 12rem !important;
+     }
+ }
+
+ #searchBox {
+     width: 10rem;
+ }
+
+ #searchButton {
+     margin-top: 0.5rem;
+ }
+
+ #addButton {
+     margin-top: 0.6rem;
+     margin-bottom: 0.3rem;
+     /*  margin-left: 26.7rem; */
+ }
+
+ #toDoUIList {
+     margin-top: 0.4rem;
+     margin-bottom: 0.4rem;
+     padding-left: 0.4rem;
+     padding-top: 0.3rem;
+     padding-bottom: 0.3rem;
+ }
+
+ .delIcon {
+     margin-right: 0.4rem;
+ }
+
+ #todoLbl {
+     padding-bottom: 0.2rem;
+ }
+
+ #deleteAllBtn {
+     margin-top: 1.7rem;
+ }

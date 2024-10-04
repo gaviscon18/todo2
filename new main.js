@@ -14,15 +14,18 @@ function addTodo(e) {
     if (todoInput.value === "") {
         alert("Lütfen boş değer girmeyiniz!");
     } else {
+        // LocalStorage'dan mevcut görevleri al
+        const storedArray = JSON.parse(localStorage.getItem('strArray')) || [];
+
+        // Yeni görevi ekle
         const newTodo = {
             todo: todoInput.value,
             done: false
         };
-
-        // LocalStorage'dan mevcut görevleri al
-        const storedArray = JSON.parse(localStorage.getItem('strArray')) || [];
         storedArray.push(newTodo); // Yeni görevi diziye ekle
-        localStorage.setItem('strArray', JSON.stringify(storedArray)); // LocalStorage'ı güncelle
+
+        // LocalStorage'ı güncelle
+        localStorage.setItem('strArray', JSON.stringify(storedArray));
 
         // UI'yi güncelle
         addTodoToUI(storedArray);
